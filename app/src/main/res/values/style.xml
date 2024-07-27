@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="parent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="headerText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/h6</item>
+        <item name="android:textStyle">bold</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">@dimen/h8</item>
+        <item name="autoSizeMinTextSize">@dimen/h6</item>
+        <item name="autoSizeStepGranularity">2sp</item>
+    </style>
+
+
+</resources>
