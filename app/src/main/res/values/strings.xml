@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">DayTastic</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_calender">Calender</string>
     <string name="title_notifications">Notifications</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="mon">MON</string>
+    <string name="tue">TUE</string>
+    <string name="wed">WED</string>
+    <string name="thur">THUR</string>
+    <string name="fri">FRI</string>
+    <string name="sat">SAT</string>
+    <string name="sun">SUN</string>
 </resources>

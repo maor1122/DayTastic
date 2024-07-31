@@ -2,7 +2,7 @@ package com.example.daytastic
 
 
 import android.util.Log
-import com.example.daytastic.forecast.ForecastData
+import com.example.daytastic.weather.forecast.ForecastData
 import com.example.daytastic.weather.Weather
 import com.google.gson.Gson
 import okhttp3.Call

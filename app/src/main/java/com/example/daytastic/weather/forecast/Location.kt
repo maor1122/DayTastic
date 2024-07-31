@@ -1,4 +1,4 @@
-package com.example.daytastic.forecast
+package com.example.daytastic.weather.forecast
 
 import com.google.gson.annotations.SerializedName
 

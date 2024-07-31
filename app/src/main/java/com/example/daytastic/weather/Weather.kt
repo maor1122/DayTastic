@@ -1,7 +1,7 @@
 package com.example.daytastic.weather
 
 import android.util.Log
-import com.example.daytastic.forecast.ForecastData
+import com.example.daytastic.weather.forecast.ForecastData
 import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.math.roundToInt

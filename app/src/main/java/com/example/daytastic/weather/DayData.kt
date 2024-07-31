@@ -1,7 +1,7 @@
 package com.example.daytastic.weather
 
 
-import com.example.daytastic.forecast.Forecastday
+import com.example.daytastic.weather.forecast.Forecastday
 import kotlin.math.round
 import kotlin.math.roundToInt
 

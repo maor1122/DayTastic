@@ -2,13 +2,9 @@ package com.example.daytastic
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Handler.Callback
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,11 +12,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.daytastic.databinding.ActivityMainBinding
 import com.example.daytastic.weather.Weather
-
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var title: TextView
+    private lateinit var temp: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,23 +33,18 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_calender, R.id.navigation_notifications
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
-
+        initWidgets()
     }
 
-    override fun onStart() {
-        super.onStart()
-        val title: TextView = findViewById(R.id.headerTextView)
-        val temp: TextView = findViewById(R.id.tempTextView)
+    private fun initWidgets() {
+        title = findViewById(R.id.headerTextView)
+        temp = findViewById(R.id.tempTextView)
         getTemperature(temp, TemperatureEngine(), "Tel-Aviv")
-
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -75,6 +68,4 @@ class MainActivity : AppCompatActivity() {
     fun testButton(view: View){
         Log.d("Interactions","Test Button Pressed")
     }
-
-
 }
