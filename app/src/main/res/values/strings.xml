@@ -12,4 +12,6 @@
     <string name="fri">FRI</string>
     <string name="sat">SAT</string>
     <string name="sun">SUN</string>
+    <string name="temperture">Temperture</string>
+    <string name="rain_chance">Rain Chance</string>
 </resources>

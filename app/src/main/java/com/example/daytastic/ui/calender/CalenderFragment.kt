@@ -1,6 +1,7 @@
 package com.example.daytastic.ui.calender
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,18 +18,21 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
+
 class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     private var _binding: FragmentCalenderBinding? = null
     private lateinit var monthYearText: TextView
     private lateinit var calendarRecyclerView: RecyclerView
     private lateinit var selectedDate: LocalDate
+    private lateinit var todayDate: LocalDate
     private lateinit var btn_prev: MaterialButton
     private lateinit var btn_next: MaterialButton
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var counter = 0
 
     override fun onCreateView(
 
@@ -50,7 +54,8 @@ class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
         btn_prev.setOnClickListener { view -> previousMonthAction(view) }
         btn_next.setOnClickListener { view -> nextMonthAction(view) }
 
-        selectedDate = LocalDate.now();
+        selectedDate = LocalDate.now()
+        todayDate = selectedDate
         setMonthView()
 
         return root
@@ -63,7 +68,7 @@ class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     private fun setMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
-        val daysInMonth: ArrayList<String> = daysInMonthArray(selectedDate)
+        val daysInMonth: ArrayList<CalenderCellModel> = daysInMonthArray(selectedDate)
 
         val calendarAdapter = CalendarAdapter(daysInMonth, this)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(activity, 7)
@@ -71,21 +76,36 @@ class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
         calendarRecyclerView.adapter = calendarAdapter
     }
 
-    private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
-        val daysInMonthArray = ArrayList<String>()
+    private fun daysInMonthArray(date: LocalDate): ArrayList<CalenderCellModel> {
+        val daysInMonthArray = ArrayList<CalenderCellModel>()
         val yearMonth = YearMonth.from(date)
 
         val daysInMonth = yearMonth.lengthOfMonth()
 
         val firstOfMonth = selectedDate.withDayOfMonth(1)
-        val dayOfWeek = firstOfMonth.dayOfWeek.value
+        var dayOfWeek = firstOfMonth.dayOfWeek.value
+        if(dayOfWeek==7)
+            dayOfWeek=0
+        val matchingDate = selectedDate == todayDate
+        val afterWeek = todayDate.plusDays(7)
+        val dayOfTheMonth = todayDate.dayOfMonth
+        Log.d("Calender","day of week: $dayOfWeek, days in month: $daysInMonth")
 
         for (i in 1..42) {
+            val day: String
+            var today = false
             if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add("")
+                day = ""
             } else {
-                daysInMonthArray.add((i - dayOfWeek).toString())
+                day = ((i - dayOfWeek).toString())
             }
+            if(matchingDate && (day==dayOfTheMonth.toString())){
+                counter = 6
+                today=true
+            }
+            
+            val daysFromToday = 7-counter--
+            daysInMonthArray.add(CalenderCellModel(day,today,daysFromToday))
         }
         return daysInMonthArray
     }
@@ -105,9 +125,13 @@ class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
     fun previousMonthAction(view: View) {
         selectedDate = selectedDate.minusMonths(1)
         setMonthView()
+        counter = 0
+        Log.d("Calender","selectedDate==todayDate: ${selectedDate==todayDate}")
+
     }
     fun nextMonthAction(view: View) {
         selectedDate = selectedDate.plusMonths(1)
         setMonthView()
+        Log.d("Calender","selectedDate==todayDate: ${selectedDate==todayDate}")
     }
 }
