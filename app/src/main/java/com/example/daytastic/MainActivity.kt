@@ -1,6 +1,7 @@
 package com.example.daytastic
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,13 +13,14 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.daytastic.databinding.ActivityMainBinding
 import com.example.daytastic.weather.Weather
+import com.example.daytastic.weather.WeatherInstance
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
+import java.time.LocalDate
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var title: TextView
-    private lateinit var temp: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,34 +40,40 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        initWidgets()
+        initWeather()
     }
 
-    private fun initWidgets() {
-        title = findViewById(R.id.headerTextView)
-        temp = findViewById(R.id.tempTextView)
-        getTemperature(temp, TemperatureEngine(), "Tel-Aviv")
+    private fun initWeather() {
+        val pref: SharedPreferences = getSharedPreferences("weather",0)
+        val weatherString = pref.getString("weather",null)
+        if(weatherString!=null){
+            val weather = Gson().fromJson(weatherString,Weather::class.java)
+            val date = LocalDate.now().toString().split(" ")[0]
+
+            if(weather.days[0].date.split(" ")[0] == date){
+                WeatherInstance.weather = weather
+                return
+            }
+        }
+        getTemperature(TemperatureEngine(),"Tel-Aviv")
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun getTemperature(textView: TextView, temperatureEngine: TemperatureEngine, location:String){
+    @SuppressLint("SetTextI18n", "CommitPrefEdits")
+    private fun getTemperature(temperatureEngine: TemperatureEngine, location:String){
         Log.d("init","getting temperature")
         try {
             val future = temperatureEngine.getWeather(location)
             future.whenComplete { weather: Weather?, e: Throwable? ->
-                runOnUiThread {
-                    if (future.isCompletedExceptionally)
-                        textView.text = e!!.message
-                    else
-                        textView.text = weather!!.days[0].aTemp.toString()+"°C"
-                }
+                    if (!future.isCompletedExceptionally){
+                        WeatherInstance.weather = weather
+                        val json = Gson().toJson(WeatherInstance.weather)
+                        val pref: SharedPreferences = getSharedPreferences("weather",0)
+                        pref.edit().putString("weather",json)
+                    }
             }
         }catch (ignore:Exception){
             Log.d("OKHTTP3","Failed to get temperature.. internet connection?")
         }
     }
 
-    fun testButton(view: View){
-        Log.d("Interactions","Test Button Pressed")
-    }
 }

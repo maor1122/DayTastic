@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calendar_view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_400sdp">
+
+    <include
+        android:id="@+id/day_info_layout"
+        layout="@layout/day_events">
+    </include>
+
+    <include
+        android:id="@+id/add_event_layout"
+        layout="@layout/new_event_layout">
+    </include>
+
+</ViewFlipper>

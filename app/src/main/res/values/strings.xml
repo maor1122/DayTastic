@@ -14,4 +14,9 @@
     <string name="sun">SUN</string>
     <string name="temperture">Temperture</string>
     <string name="rain_chance">Rain Chance</string>
+    <string name="condition">Condition</string>
+    <string name="event_name">Event Name</string>
+    <string name="date">Date</string>
+    <string name="duration">duration</string>
+    <string name="type">type</string>
 </resources>

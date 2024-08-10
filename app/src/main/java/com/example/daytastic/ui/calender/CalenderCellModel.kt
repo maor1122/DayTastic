@@ -1,3 +1,6 @@
 package com.example.daytastic.ui.calender
 
-data class CalenderCellModel(val day: String, val today: Boolean, val daysFromToday: Int)
+import java.time.LocalDate
+import java.util.Date
+
+data class CalenderCellModel(val day: String, val date: LocalDate?)

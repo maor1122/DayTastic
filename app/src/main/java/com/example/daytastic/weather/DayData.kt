@@ -9,6 +9,7 @@ import kotlin.math.roundToInt
 class DayData(data: Forecastday){
     val date = data.date!!
     val aTemp = data.day!!.avgtempC!!.roundToInt()
+    val rainChance = data.day!!.dailyChanceOfRain!!
     val hourlyTemp = WeatherUtils.getHourlyTemp(data)
     val condition = data.day!!.condition!!.text!!
 }
