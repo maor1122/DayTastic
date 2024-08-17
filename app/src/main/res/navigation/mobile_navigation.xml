@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_calender"
-        android:name="com.example.daytastic.ui.calender.CalenderFragment"
+        android:name="com.example.daytastic.ui.calender.CalendarFragment"
         android:label="@string/title_calender"
         tools:layout="@layout/fragment_calender" />
 

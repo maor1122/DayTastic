@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.example.daytastic.ui.calender.CalenderCellModel
+import com.example.daytastic.ui.calender.CalendarCellModel
 import com.example.daytastic.weather.WeatherInstance.weather
 import java.time.Duration
 
 
 class CalendarAdapter(
-    private val daysOfMonth: ArrayList<CalenderCellModel>,
+    private val daysOfMonth: ArrayList<CalendarCellModel>,
     private val onItemListener: OnItemListener
 ) :
     RecyclerView.Adapter<CalendarViewHolder>() {

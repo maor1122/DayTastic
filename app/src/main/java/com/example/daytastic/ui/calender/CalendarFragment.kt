@@ -21,7 +21,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
+class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     private var _binding: FragmentCalenderBinding? = null
     private lateinit var monthYearText: TextView
@@ -66,7 +66,7 @@ class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     private fun setMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
-        val daysInMonth: ArrayList<CalenderCellModel> = daysInMonthArray(selectedDate)
+        val daysInMonth: ArrayList<CalendarCellModel> = daysInMonthArray(selectedDate)
 
         val calendarAdapter = CalendarAdapter(daysInMonth, this)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(activity, 7)
@@ -75,12 +75,10 @@ class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
     }
 
     @SuppressLint("DefaultLocale")
-    private fun daysInMonthArray(date: LocalDate): ArrayList<CalenderCellModel> {
-        val daysInMonthArray = ArrayList<CalenderCellModel>()
+    private fun daysInMonthArray(date: LocalDate): ArrayList<CalendarCellModel> {
+        val daysInMonthArray = ArrayList<CalendarCellModel>()
         val yearMonth = YearMonth.from(date)
-
         val daysInMonth = yearMonth.lengthOfMonth()
-
         val firstOfMonth = selectedDate.withDayOfMonth(1)
         var dayOfWeek = firstOfMonth.dayOfWeek.value
         if(dayOfWeek==7)
@@ -108,7 +106,7 @@ class CalenderFragment : Fragment(), CalendarAdapter.OnItemListener {
             }
             
             val daysFromToday = 7-counter--
-            daysInMonthArray.add(CalenderCellModel(day,date))
+            daysInMonthArray.add(CalendarCellModel(day,date))
         }
         return daysInMonthArray
     }

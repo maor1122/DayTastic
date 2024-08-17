@@ -75,5 +75,4 @@ class MainActivity : AppCompatActivity() {
             Log.d("OKHTTP3","Failed to get temperature.. internet connection?")
         }
     }
-
 }

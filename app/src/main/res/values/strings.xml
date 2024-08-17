@@ -19,4 +19,12 @@
     <string name="date">Date</string>
     <string name="duration">duration</string>
     <string name="type">type</string>
+    <string name="start">Start:</string>
+    <string name="event_name_">Event Name:</string>
+    <string name="end">End:</string>
+    <string name="end_time">End Time</string>
+    <string name="start_time">Start Time</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="notify">Notify:</string>
 </resources>
