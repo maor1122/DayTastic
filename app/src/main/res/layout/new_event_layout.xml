@@ -77,20 +77,19 @@
     </LinearLayout>
 
     <RadioGroup
+        android:id="@+id/alarmTypeRG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="@dimen/_10sdp"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/notify"
-            android:textSize="@dimen/_15sdp"
             android:layout_weight="1"
-            >
-        </TextView>
+            android:text="@string/notify"
+            android:textSize="@dimen/_15sdp"></TextView>
 
         <RadioButton
             android:id="@+id/alarmRB"

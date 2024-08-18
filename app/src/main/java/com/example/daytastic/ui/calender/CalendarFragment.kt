@@ -84,7 +84,6 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         if(dayOfWeek==7)
             dayOfWeek=0
         val matchingDate = selectedDate == TodayDate.date
-        val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val dayOfTheMonth = TodayDate.date.dayOfMonth
         var date:LocalDate? = null
         Log.d("Calender","day of week: $dayOfWeek, days in month: $daysInMonth")
@@ -98,7 +97,8 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
                 day = ""
             } else {
                 day = ((i - dayOfWeek).toString())
-                date = LocalDate.parse("${selectedDate.year}-${String.format("%02d",selectedDate.monthValue)}-${String.format("%02d",day.toInt())}",format)
+                date = LocalDate.parse("${selectedDate.year}-${String.format("%02d",selectedDate.monthValue)}-${String.format("%02d",day.toInt())}",
+                    DateTimeFormatter.ISO_LOCAL_DATE)
             }
             if(matchingDate && (day==dayOfTheMonth.toString())){
                 counter = 6
@@ -118,7 +118,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     override fun onItemClick(position: Int, dayText: String?) {
         if (dayText != "") {
-            DayEventsDialog(requireActivity()).show()
+            DayEventsDialog(requireActivity(),selectedDate).show()
         }
     }
 

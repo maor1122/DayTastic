@@ -27,4 +27,8 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="notify">Notify:</string>
+    <string name="new_event">New Event</string>
+    <string name="event_color">Event Color</string>
+    <string name="start_time_end_time">Start time - End time</string>
+    <string name="alarm_type">Alarm Type</string>
 </resources>
