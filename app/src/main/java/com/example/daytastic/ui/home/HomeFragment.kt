@@ -47,7 +47,9 @@ class HomeFragment : Fragment()  {
         rainTextView = binding.rainTextView
         conditionTextView = binding.conditionTextView
         weatherLayout = binding.weatherLayout
-        setWeatherViewsOnWeatherUpdate()
+        try {
+            setWeatherViewsOnWeatherUpdate()
+        }catch(_:Exception){}
         setOtherViews()
     }
 

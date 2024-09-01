@@ -16,6 +16,7 @@ class CalendarViewHolder(itemView: View, private val onItemListener: OnItemListe
     val weatherLayout: LinearLayout = itemView.findViewById(R.id.weather_layout)
     val conditionTextView: TextView = itemView.findViewById(R.id.conditionTextView)
     val tempTextView: TextView = itemView.findViewById(R.id.tempTextView)
+    val eventListLL: LinearLayout = itemView.findViewById(R.id.calendarCellEventListLL)
 
     init {
         itemView.setOnClickListener(this)

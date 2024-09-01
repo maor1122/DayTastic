@@ -64,7 +64,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         _binding = null
     }
 
-    private fun setMonthView() {
+    fun setMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
         val daysInMonth: ArrayList<CalendarCellModel> = daysInMonthArray(selectedDate)
 
@@ -117,8 +117,9 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     }
 
     override fun onItemClick(position: Int, dayText: String?) {
-        if (dayText != "") {
-            DayEventsDialog(requireActivity(),selectedDate).show()
+        if (!dayText.isNullOrEmpty()) {
+            selectedDate = selectedDate.withDayOfMonth(dayText.toInt())
+            DayEventsDialog(requireActivity(),selectedDate,this).show()
         }
     }
 
