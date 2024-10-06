@@ -6,7 +6,7 @@ DayTastic is an Android calendar application that integrates weather forecasts a
 
   <li>Calendar Management: Easily manage your daily, weekly, and monthly schedules.</li>
   <li>Weather Integration: Receive real-time weather forecasts directly within the calendar view.</li>
-  <li>Customizable Alarms: Set personalized alarms with flexible configurations to match your schedule.</li>
+  <li>Customizable Alarms: Set personalized alarms with flexible configurations to match your schedule (in progress).</li>
   <li>User-Friendly Interface: Designed for an intuitive user experience (in progress).</li>
 </ul>
 
