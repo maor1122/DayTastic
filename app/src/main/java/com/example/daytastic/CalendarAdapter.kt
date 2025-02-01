@@ -38,15 +38,16 @@ class CalendarAdapter(
             holder.weatherLayout.visibility= LinearLayout.GONE
             return
         }
+        holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border)
         val date = LocalDate.parse(daysOfMonth[position].date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
         addEvents(holder.eventListLL,CalendarEventsInstance.getEventsListOfDate(date))
         if(daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())) {
-            holder.cellLayout.setBackgroundResource(R.color.teal_200)
+            holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border_today)
             holder.weatherLayout.visibility = LinearLayout.GONE
         }
         else {
             val diff = Duration.between(TodayDate.date.atStartOfDay(),daysOfMonth[position].date!!.atStartOfDay()).toDays()
-            if (diff in 1..<weather!!.days.size){
+            if (weather!= null && diff in 1..<weather!!.days.size){
                 holder.tempTextView.text = weather!!.days[diff.toInt()].aTemp.toString() + "°C"
                 holder.conditionTextView.text = weather!!.days[diff.toInt()].condition
             }
