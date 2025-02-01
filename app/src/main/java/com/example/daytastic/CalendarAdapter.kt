@@ -2,6 +2,7 @@ package com.example.daytastic
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,8 +35,8 @@ class CalendarAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         holder.dayOfMonth.text = daysOfMonth[position].day
+        //Log.d("Calendar cell","Position: "+position+" Day: "+daysOfMonth[position])
         if(daysOfMonth[position].day == ""){
-            holder.weatherLayout.visibility= LinearLayout.GONE
             return
         }
         holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border)
@@ -43,16 +44,6 @@ class CalendarAdapter(
         addEvents(holder.eventListLL,CalendarEventsInstance.getEventsListOfDate(date))
         if(daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())) {
             holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border_today)
-            holder.weatherLayout.visibility = LinearLayout.GONE
-        }
-        else {
-            val diff = Duration.between(TodayDate.date.atStartOfDay(),daysOfMonth[position].date!!.atStartOfDay()).toDays()
-            if (weather!= null && diff in 1..<weather!!.days.size){
-                holder.tempTextView.text = weather!!.days[diff.toInt()].aTemp.toString() + "°C"
-                holder.conditionTextView.text = weather!!.days[diff.toInt()].condition
-            }
-            else
-                holder.weatherLayout.visibility= LinearLayout.GONE
         }
     }
 
@@ -67,6 +58,7 @@ class CalendarAdapter(
             val eventItem = TextView(eventListLL.context)
             eventItem.text = event.name
             eventItem.setBackgroundColor(event.color)
+            eventItem.layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
             eventListLL.addView(eventItem)
         }
     }
