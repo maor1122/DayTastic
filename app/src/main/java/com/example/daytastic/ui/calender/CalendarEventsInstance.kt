@@ -1,22 +1,51 @@
 package com.example.daytastic.ui.calender
 
+import android.app.AlarmManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 object CalendarEventsInstance {
     private var events: MutableMap<String,MutableList<CalendarEvent>> = hashMapOf()
 
+    fun deleteEvent(event:CalendarEvent){
+        if(events.contains(event.date))
+            events[event.date]?.remove(event)
+    }
+
+    fun deleteEventAndUpdate(event:CalendarEvent,context: Context){
+        deleteEvent(event)
+        Thread { saveEvents(context) }.start()
+    }
+
     fun addEvent(event:CalendarEvent,context:Context){
+        if(event.alarmType=="Notification"){
+            addNotification(event)
+        }
+        else if(event.alarmType=="Alarm"){
+
+        }
         if(events.contains(event.date))
             events[event.date]?.add(event)
         else{
             events[event.date] = mutableListOf(event)
         }
         Thread { saveEvents(context) }.start()
+    }
+
+    private fun addNotification(event: CalendarEvent) {
+        val time = getLocalTimeDate(event)
+    }
+
+    private fun getLocalTimeDate(event:CalendarEvent) : LocalDateTime{
+        val date = LocalDate.parse(event.date, DateTimeFormatter.ISO_LOCAL_DATE)
+        val time = LocalTime.parse(event.startTime)
+        return LocalDateTime.of(date,time)
     }
 
     private fun saveEvents(context: Context){

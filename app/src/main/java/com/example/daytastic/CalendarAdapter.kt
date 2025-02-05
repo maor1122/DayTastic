@@ -1,14 +1,22 @@
 package com.example.daytastic
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.daytastic.ui.calender.CalendarCellModel
+import com.example.daytastic.ui.calender.CalendarEvent
+import com.example.daytastic.ui.calender.CalendarEventsInstance
 import com.example.daytastic.weather.WeatherInstance.weather
 import java.time.Duration
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class CalendarAdapter(
@@ -27,23 +35,31 @@ class CalendarAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         holder.dayOfMonth.text = daysOfMonth[position].day
+        //Log.d("Calendar cell","Position: "+position+" Day: "+daysOfMonth[position])
         if(daysOfMonth[position].day == ""){
-            holder.weatherLayout.visibility= LinearLayout.GONE
             return
         }
+        holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border)
+        val date = LocalDate.parse(daysOfMonth[position].date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        addEvents(holder.eventListLL,CalendarEventsInstance.getEventsListOfDate(date))
         if(daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())) {
-            holder.cellLayout.setBackgroundResource(R.color.teal_200)
-            holder.weatherLayout.visibility = LinearLayout.GONE
+            holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border_today)
         }
-        else {
-            val diff = Duration.between(TodayDate.date.atStartOfDay(),daysOfMonth[position].date!!.atStartOfDay()).toDays()
-            if (diff in 1..<weather!!.days.size){
-                holder.tempTextView.text = weather!!.days[diff.toInt()].aTemp.toString() + "°C"
-                holder.conditionTextView.text = weather!!.days[diff.toInt()].condition
-            }
-            else
-                holder.weatherLayout.visibility= LinearLayout.GONE
+    }
 
+    @SuppressLint("SetTextI18n")
+    private fun addEvents(eventListLL: LinearLayout, eventsListOfDate: MutableList<CalendarEvent>?) {
+        if(eventsListOfDate.isNullOrEmpty()){
+            return
+        }
+        eventsListOfDate.sortBy { event -> event.startTime }
+        eventsListOfDate.forEach{ event ->
+
+            val eventItem = TextView(eventListLL.context)
+            eventItem.text = event.name
+            eventItem.setBackgroundColor(event.color)
+            eventItem.layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+            eventListLL.addView(eventItem)
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.daytastic
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -24,14 +25,14 @@ import android.widget.ViewFlipper
 import androidx.fragment.app.FragmentActivity
 import com.example.daytastic.ui.calender.CalendarEvent
 import com.example.daytastic.ui.calender.CalendarEventsInstance
-import com.google.android.material.button.MaterialButton
+import com.example.daytastic.ui.calender.CalendarFragment
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.jvm.Throws
 
 
-class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate) : Dialog(a) {
+class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, private val fragment: CalendarFragment) : Dialog(a) {
     private lateinit var eventNameED:EditText
     private lateinit var rgColorPicker:RadioGroup
     private lateinit var alarmTimeBeforeSpinner: Spinner
@@ -55,7 +56,7 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate) 
         viewFlipper = findViewById(R.id.calendar_view_flipper)
         val clickedDateEvents = CalendarEventsInstance.getEventsListOfDate(selectedDate)
         if(clickedDateEvents.isNullOrEmpty()) {
-            initNewEventDialog()
+            initNewEventDialog(null)
             viewFlipper.showNext()
         }
         else{
@@ -63,31 +64,39 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate) 
         }
     }
 
-    private fun initNewEventDialog(){
-        findViewById<RadioButton>(R.id.notificationRB).isChecked = true
-        alarmTypeRG.setOnCheckedChangeListener{ group,id->
+    private fun initNewEventDialog(event:CalendarEvent?) {
+        findViewById<RadioButton>(getAlarmType(event)).isChecked = true
+        alarmTypeRG.setOnCheckedChangeListener { group, id ->
             val buttonText = findViewById<RadioButton>(id).text
-            if(buttonText =="None"){
+            if (buttonText == "None") {
                 alarmTimeBeforeSpinner.isEnabled = false
-            }
-            else if (buttonText=="Notification" || buttonText=="Alarm"){
+            } else if (buttonText == "Notification" || buttonText == "Alarm") {
                 alarmTimeBeforeSpinner.isEnabled = true
             }
         }
         val cancelButton = findViewById<Button>(R.id.cancel_button)
         val saveButton = findViewById<Button>(R.id.save_button)
-        val items = listOf("00:00","00:05","00:10","00:15","00:30","00:45","01:00")
+        val items = listOf("00:00", "00:05", "00:10", "00:15", "00:30", "00:45", "01:00")
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, items)
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         alarmTimeBeforeSpinner.adapter = adapter
 
         cancelButton.setOnClickListener { this.cancel() }
-        saveButton.setOnClickListener {saveEventButtonClicked()}
+        saveButton.setOnClickListener {
+                saveEventButtonClicked(event) }
+        if (event != null) {
+            findViewById<EditText>(R.id.event_name_et).setText(event.name)
+            alarmTimeBeforeSpinner.setSelection(items.indexOf(event.alarmTiming))
+            startTimeButton.text = event.startTime
+            endTimeButton.text = event.endTime
+        }
+        else {
+            val time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+            startTimeButton.text = time
+            endTimeButton.text = time
+        }
 
-        val time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
-        startTimeButton.text = time
-        endTimeButton.text = time
         startTimeButton.setOnClickListener{view ->
             getTime(view)
         }
@@ -98,16 +107,24 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate) 
         createColorPalette(rgColorPicker)
     }
 
+    private fun getAlarmType(event: CalendarEvent?): Int {
+        if(event==null || event.alarmType=="Notification") return R.id.notificationRB
+        if(event.alarmType == "Alarm") return R.id.alarmRB
+        else return R.id.noneRB
+    }
+
     @SuppressLint("SetTextI18n")
     private fun initEventListDialog(clickedDateEvents: MutableList<CalendarEvent>) {
         Log.d("addEventsToDialog","Selected Events Date: $selectedDate")
+        val eventsListLinearLayout = findViewById<LinearLayout>(R.id.events_linear_layout)
+        eventsListLinearLayout.removeAllViews()
         val newEventImageView = findViewById<ImageView>(R.id.newEventButton)
-
+        val eventListDate = findViewById<TextView>(R.id.calenderDayDate)
+        eventListDate.text = selectedDate.toString()
         newEventImageView.setOnClickListener{
-            initNewEventDialog()
+            initNewEventDialog(null)
             viewFlipper.showNext()
         }
-        val eventsListLinearLayout = findViewById<LinearLayout>(R.id.events_linear_layout)
         clickedDateEvents.sortBy { event -> event.startTime }
         clickedDateEvents.forEach{ event ->
             val inflater = LayoutInflater.from(ownerActivity)
@@ -116,6 +133,13 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate) 
             eventItem.findViewById<TextView>(R.id.alarmTypeTV).text = event.alarmType
             eventItem.findViewById<TextView>(R.id.durationTV).text = "${event.startTime} - ${event.endTime}"
             (eventItem.findViewById<ImageView>(R.id.circleView).background as GradientDrawable).setColor(event.color)
+            eventItem.findViewById<LinearLayout>(R.id.eventListItemLL).setOnClickListener {
+                initNewEventDialog(event)
+                viewFlipper.showNext()}
+            eventItem.findViewById<ImageView>(R.id.deleteEventBTN).setOnClickListener {
+                CalendarEventsInstance.deleteEventAndUpdate(event,context)
+                eventsListLinearLayout.removeView(eventItem)
+            }
             eventsListLinearLayout.addView(eventItem)
         }
     }
@@ -168,11 +192,11 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate) 
             rgColorPicker.addView(rb)
         }
     }
-    private fun saveEventButtonClicked(){
+    private fun saveEventButtonClicked(prevEvent: CalendarEvent?){
         val event = createEvent()
         Log.d("Save","${event.name},${event.alarmType},${event.color},${event.startTime},${event.endTime},${event.date},${event.alarmTiming}")
         try {
-            saveEvent(event)
+            saveEvent(event,prevEvent)
             this.cancel()
         }catch (e:Exception){
             Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
@@ -181,20 +205,28 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate) 
     private fun createEvent(): CalendarEvent{
         val alarmButtonIndex = alarmTypeRG.indexOfChild(findViewById(alarmTypeRG.checkedRadioButtonId))
         val alarmSelected = (alarmTypeRG.getChildAt(alarmButtonIndex) as RadioButton).text
-        val colorButtonIndex = rgColorPicker.indexOfChild(findViewById(rgColorPicker.checkedRadioButtonId))
-        val colorSelected = (rgColorPicker.getChildAt(colorButtonIndex) as RadioButton).backgroundTintList!!.defaultColor
+        val colorButtonIndex = rgColorPicker.indexOfChild(rgColorPicker.findViewById(rgColorPicker.checkedRadioButtonId))
+        val colorSelected = (rgColorPicker.getChildAt(colorButtonIndex) as RadioButton).backgroundTintList?.defaultColor
         val startTime = LocalTime.parse(startTimeButton.text)
         val endTime = LocalTime.parse(endTimeButton.text)
         val alarmTimingString = alarmTimeBeforeSpinner.selectedItem.toString()
-        return CalendarEvent(eventNameED.text.toString(),alarmSelected.toString(),colorSelected,startTime.toString(),endTime.toString(),
+        return CalendarEvent(eventNameED.text.toString(),alarmSelected.toString(),colorSelected!!,startTime.toString(),endTime.toString(),
             selectedDate.toString(),alarmTimingString)
     }
     @Throws
-    private fun saveEvent(event: CalendarEvent){
+    private fun saveEvent(event: CalendarEvent,prevEvent:CalendarEvent?){
         if(event.name.isEmpty())
             throw Exception("Please fill event name")
         if(LocalTime.parse(event.startTime).isAfter(LocalTime.parse(event.endTime)))
             throw Exception("End time can't be after start time.")
+        if(prevEvent!=null)
+            CalendarEventsInstance.deleteEvent(prevEvent)
         CalendarEventsInstance.addEvent(event,context)
     }
+
+    override fun onStop() {
+        super.onStop()
+        fragment.setMonthView()
+    }
+
 }

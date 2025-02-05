@@ -50,8 +50,8 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         btn_prev = binding.btnPrev
         btn_next = binding.btnNext
 
-        btn_prev.setOnClickListener { view -> previousMonthAction(view) }
-        btn_next.setOnClickListener { view -> nextMonthAction(view) }
+        btn_prev.setOnClickListener { view -> previousMonthAction() }
+        btn_next.setOnClickListener { view -> nextMonthAction() }
 
         selectedDate = TodayDate.date
         setMonthView()
@@ -64,7 +64,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         _binding = null
     }
 
-    private fun setMonthView() {
+    fun setMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
         val daysInMonth: ArrayList<CalendarCellModel> = daysInMonthArray(selectedDate)
 
@@ -86,13 +86,12 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         val matchingDate = selectedDate == TodayDate.date
         val dayOfTheMonth = TodayDate.date.dayOfMonth
         var date:LocalDate? = null
-        Log.d("Calender","day of week: $dayOfWeek, days in month: $daysInMonth")
-        Log.d("Weather","weather.days.size: ${WeatherInstance.weather!!.days.size}")
+        //Log.d("Calender","day of week: $dayOfWeek, days in month: $daysInMonth")
+        //Log.d("Weather","weather.days.size: ${WeatherInstance.weather!!.days.size}")
 
 
         for (i in 1..42) {
             val day: String
-            var today = false
             if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
                 day = ""
             } else {
@@ -102,10 +101,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
             }
             if(matchingDate && (day==dayOfTheMonth.toString())){
                 counter = 6
-                today=true
             }
-            
-            val daysFromToday = 7-counter--
             daysInMonthArray.add(CalendarCellModel(day,date))
         }
         return daysInMonthArray
@@ -117,19 +113,20 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     }
 
     override fun onItemClick(position: Int, dayText: String?) {
-        if (dayText != "") {
-            DayEventsDialog(requireActivity(),selectedDate).show()
+        if (!dayText.isNullOrEmpty()) {
+            selectedDate = selectedDate.withDayOfMonth(dayText.toInt())
+            DayEventsDialog(requireActivity(),selectedDate,this).show()
         }
     }
 
-    private fun previousMonthAction(view: View) {
+    private fun previousMonthAction() {
         selectedDate = selectedDate.minusMonths(1)
         setMonthView()
         counter = 0
         Log.d("Calender","selectedDate==todayDate: ${selectedDate==TodayDate.date}")
 
     }
-    private fun nextMonthAction(view: View) {
+    private fun nextMonthAction() {
         selectedDate = selectedDate.plusMonths(1)
         setMonthView()
         Log.d("Calender","selectedDate==todayDate: ${selectedDate==TodayDate.date}")

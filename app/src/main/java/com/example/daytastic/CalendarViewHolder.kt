@@ -13,9 +13,7 @@ class CalendarViewHolder(itemView: View, private val onItemListener: OnItemListe
     RecyclerView.ViewHolder(itemView), View.OnClickListener {
     val dayOfMonth: TextView = itemView.findViewById(R.id.cellDayText)
     val cellLayout: ConstraintLayout = itemView.findViewById(R.id.constraint_c_cell)
-    val weatherLayout: LinearLayout = itemView.findViewById(R.id.weather_layout)
-    val conditionTextView: TextView = itemView.findViewById(R.id.conditionTextView)
-    val tempTextView: TextView = itemView.findViewById(R.id.tempTextView)
+    val eventListLL: LinearLayout = itemView.findViewById(R.id.calendarCellEventListLL)
 
     init {
         itemView.setOnClickListener(this)

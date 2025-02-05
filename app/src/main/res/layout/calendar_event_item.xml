@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/calendarEventItemLL"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -8,10 +9,10 @@
     <TextView
         android:id="@+id/event_name_tv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:textSize="@dimen/_25sdp"
-        android:text="@string/event_name" />
+        android:text="@string/event_name"
+        android:textSize="@dimen/_25sdp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,16 +24,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="@dimen/_20sdp"
-            android:text="@string/duration" />
+            android:text="@string/start_time_end_time"
+            android:textSize="@dimen/_20sdp" />
 
         <TextView
             android:id="@+id/alarm_type_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="@dimen/_20sdp"
             android:text="@string/type"
+            android:textSize="@dimen/_20sdp"
             app:drawableLeftCompat="@drawable/baseline_access_alarm_24" />
     </LinearLayout>
 
