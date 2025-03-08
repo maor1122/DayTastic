@@ -3,6 +3,7 @@ package com.example.daytastic
 import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +58,7 @@ class CalendarAdapter(
 
             val eventItem = TextView(eventListLL.context)
             eventItem.text = event.name
+            eventItem.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,4F,eventListLL.context.resources.displayMetrics)
             eventItem.setBackgroundColor(event.color)
             eventItem.layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
             eventListLL.addView(eventItem)
