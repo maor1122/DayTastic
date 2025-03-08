@@ -169,6 +169,13 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
         saveTimeButton.setOnClickListener {
             val time = LocalTime.of(timePicker.hour,timePicker.minute)
             view.text = time.toString()
+            if(R.id.start_time_button==view.id) {
+                val endTimeView = findViewById<Button>(R.id.end_time_button)
+                val t = endTimeView.text.split(':')
+                if (timePicker.hour > t[0].toInt() || (timePicker.hour==t[0].toInt() && timePicker.minute > t[1].toInt())){
+                    endTimeView.text = time.toString()
+                }
+            }
             newDialog.cancel()
         }
     }

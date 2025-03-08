@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import com.example.daytastic.reminders.scheduleNotification
 import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -25,7 +26,7 @@ object CalendarEventsInstance {
 
     fun addEvent(event:CalendarEvent,context:Context){
         if(event.alarmType=="Notification"){
-            addNotification(event)
+            addNotification(context,event)
         }
         else if(event.alarmType=="Alarm"){
 
@@ -38,8 +39,10 @@ object CalendarEventsInstance {
         Thread { saveEvents(context) }.start()
     }
 
-    private fun addNotification(event: CalendarEvent) {
+    private fun addNotification(context:Context, event: CalendarEvent) {
         val time = getLocalTimeDate(event)
+        val name = event.name
+        scheduleNotification(context,time,name)
     }
 
     private fun getLocalTimeDate(event:CalendarEvent) : LocalDateTime{
