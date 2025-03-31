@@ -1,33 +1,45 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
 
-    <style name="Theme.DayTastic.Light" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.DayTastic.Light" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">#2196F3</item>  <!-- Blue -->
         <item name="colorPrimaryVariant">#1976D2</item>
         <item name="colorSecondary">#03DAC6</item>
-        <item name="android:colorBackground">#FFFFFF</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <!-- Dark Theme -->
-    <style name="Theme.DayTastic.Dark" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">#0D47A1</item>  <!-- Deep Blue -->
-        <item name="colorPrimaryVariant">#1565C0</item>
-        <item name="colorSecondary">#03DAC6</item>
-        <item name="colorOnPrimary">#000000</item>  <!-- Deep Blue -->
-        <item name="colorOnSecondary">#000000</item>
-        <item name="android:colorBackground">#4E4D4D</item>
-        <item name="colorOnSurface">#FFFFFF</item>
-        <item name="colorOnBackground">#FFFFFF</item>
-        <item name="android:textColor">#E0E0E0</item>
+    <!-- Base Dark Theme -->
+    <style name="Theme.DayTastic.Dark" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">#83d5c5</item>
+        <item name="colorOnPrimary">#003730</item>
+        <item name="colorPrimaryContainer">#005046</item>
+        <item name="colorOnPrimaryContainer">#9ff2e1</item>
+        <item name="colorSecondary">#b1ccc5</item>
+        <item name="colorOnSecondary">#1c3530</item>
+        <item name="colorSecondaryContainer">#334b46</item>
+        <item name="colorOnSecondaryContainer">#cde8e1</item>
+        <item name="colorTertiary">#abcae5</item>
+        <item name="colorOnTertiary">#133348</item>
+        <item name="colorTertiaryContainer">#2c4a60</item>
+        <item name="colorOnTertiaryContainer">#cae6ff</item>
+        <item name="colorSurfaceDim">#0e1513</item>
+        <item name="colorSurface">#0e1513</item>
+        <item name="colorSurfaceContainerLowest">#090f0e</item>
+        <item name="colorSurfaceContainerLow">#171d1b</item>
+        <item name="colorSurfaceContainer">#1b211f</item>
+        <item name="colorSurfaceContainerHigh">#252b29</item>
+        <item name="colorSurfaceContainerHighest">#303634</item>
+        <item name="colorOnSurface">#dee4e1</item>
+        <item name="colorOnSurfaceVariant">#bec9c5</item>
+        <item name="colorOutline">#899390</item>
+        <item name="colorOutlineVariant">#3f4946</item>
+        <item name="colorSurfaceInverse">#dee4e1</item>
+        <item name="colorOnSurfaceInverse">#dee4e1</item>
+        <item name="colorPrimaryInverse">#016b5d</item>
+        <item name="android:shadowColor">#000000</item>
     </style>
 
-    <!-- Custom Theme (Example: Green) -->
-    <style name="Theme.DayTastic.Green" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.DayTastic.Green" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">#4CAF50</item>  <!-- Green -->
         <item name="colorPrimaryVariant">#388E3C</item>
         <item name="colorSecondary">#8BC34A</item>
-        <item name="android:colorBackground">#E8F5E9</item>
-        <item name="android:textColor">#1B5E20</item>
     </style>
 </resources>

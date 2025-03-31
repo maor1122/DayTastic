@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.util.TypedValue
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,8 @@ class CalendarAdapter(
 ) :
     RecyclerView.Adapter<CalendarViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
+        val context = ContextThemeWrapper(parent.context,R.style.Theme_DayTastic_Dark)
+        val inflater = LayoutInflater.from(context)
         val view: View = inflater.inflate(R.layout.calendar_cell, parent, false)
         val layoutParams = view.layoutParams
         layoutParams.height = (parent.height * 0.15).toInt()
@@ -49,6 +51,8 @@ class CalendarAdapter(
             val typedValue = TypedValue()
             context.theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue,true)
             holder.cellLayout.setBackgroundColor(typedValue.data)
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnSecondary, typedValue,true)
+            holder.dayOfMonth.setTextColor(typedValue.data)
         }
     }
 

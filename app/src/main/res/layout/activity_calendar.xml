@@ -10,13 +10,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="?attr/colorSurfaceContainerLow"
             android:layout_marginBottom="20dp">
 
             <com.google.android.material.button.MaterialButton
@@ -55,8 +55,24 @@
                 app:icon="@drawable/outline_arrow_circle_right_24" />
 
         </LinearLayout>
-
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_70sdp">
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="@dimen/_8sdp"
+            android:background="?attr/colorSurfaceContainer"
+            android:orientation="vertical">
+        <LinearLayout
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:elevation="@dimen/_2sdp"
+            android:background="?attr/colorSurfaceContainerHigh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -127,5 +143,8 @@
             android:layout_height="match_parent"/>
 
     </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import com.example.daytastic.ui.calender.CalendarCellModel
 import com.example.daytastic.weather.Weather
 import com.example.daytastic.weather.WeatherInstance
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.color.DynamicColors
 import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.YearMonth
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
 
     override fun onCreate(savedInstanceState: Bundle?){
         setTheme(getThemeFromPrefs())
+        DynamicColors.applyToActivitiesIfAvailable(application)
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarBinding.inflate(layoutInflater) // Inflate the correct binding
         setContentView(binding.root)
@@ -160,8 +162,8 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
 
     private fun getThemeFromPrefs(): Int {
         return when (ThemeHelper.getSavedTheme(this)) {
-            "Theme.MyApp.Light" ->  R.style.Theme_DayTastic_Light
-            "Theme.MyApp.Green" -> R.style.Theme_DayTastic_Green
+//            "Theme.MyApp.Light" ->  R.style.Theme_DayTastic_Light
+//            "Theme.MyApp.Green" -> R.style.Theme_DayTastic_Green
             else -> R.style.Theme_DayTastic_Dark
         }
     }

@@ -6,39 +6,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="@dimen/_10sdp">
-            <TextView
-                android:layout_gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/_15sdp"
-                android:layout_weight="1"
-                android:labelFor="@id/event_name_et"
-                android:text="@string/event_name_" />
-
-            <EditText
-                android:id="@+id/event_name_et"
-                android:layout_width="@dimen/_200sdp"
+            android:layout_margin="@dimen/_7sdp">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints="event_names"
+                android:hint="Event Name"
                 android:ems="10"
                 android:layout_gravity="end"
                 android:textSize="@dimen/_15sdp"
-                android:inputType="text"/>
+                android:inputType="text">
+            <EditText
+                android:id="@+id/event_name_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="@dimen/_10sdp">
+            android:layout_margin="@dimen/_7sdp">
             <TextView
                 android:layout_gravity="center"
                 android:layout_width="0dp"
@@ -61,7 +57,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="@dimen/_10sdp">
+            android:layout_marginBottom="@dimen/_7sdp"
+            android:layout_marginStart="@dimen/_7sdp"
+            android:layout_marginEnd="@dimen/_7sdp">
             <TextView
                 android:layout_gravity="center"
                 android:layout_width="0dp"
@@ -80,46 +78,51 @@
                 android:textSize="20sp"/>
         </LinearLayout>
 
-        <RadioGroup
-            android:id="@+id/alarmTypeRG"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp"
-            android:gravity="end"
+            android:layout_margin="@dimen/_7sdp"
             android:orientation="horizontal">
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:text="@string/notify"
-                android:textSize="@dimen/_15sdp"></TextView>
-
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:textSize="@dimen/_15sdp"/>
+            <RadioGroup
+                android:id="@+id/alarmTypeRG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
             <RadioButton
                 android:id="@+id/alarmRB"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:text="Alarm" />
 
             <RadioButton
                 android:id="@+id/notificationRB"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:text="Notification" />
 
             <RadioButton
                 android:id="@+id/noneRB"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:text="None" />
-        </RadioGroup>
+            </RadioGroup>
+        </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="@dimen/_10sdp">
+            android:layout_margin="@dimen/_7sdp">
             <TextView
                 android:layout_gravity="center"
                 android:layout_width="0dp"
@@ -153,7 +156,7 @@
             android:id="@+id/color_picker_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp"
+            android:layout_margin="@dimen/_7sdp"
             android:orientation="horizontal">
 
         </RadioGroup>
