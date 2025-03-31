@@ -2,7 +2,6 @@ package com.example.daytastic
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -25,14 +24,13 @@ import android.widget.ViewFlipper
 import androidx.fragment.app.FragmentActivity
 import com.example.daytastic.ui.calender.CalendarEvent
 import com.example.daytastic.ui.calender.CalendarEventsInstance
-import com.example.daytastic.ui.calender.CalendarFragment
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.jvm.Throws
 
 
-class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, private val fragment: CalendarFragment) : Dialog(a) {
+class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, private val fragment: MainActivity) : Dialog(a) {
     private lateinit var eventNameED:EditText
     private lateinit var rgColorPicker:RadioGroup
     private lateinit var alarmTimeBeforeSpinner: Spinner

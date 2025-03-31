@@ -25,7 +25,7 @@
         android:src="@drawable/baseline_alarm_24"
         android:layout_marginTop="@dimen/_10sdp"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_stop_alarm"
         android:layout_width="80dp"
         android:layout_height="80dp"

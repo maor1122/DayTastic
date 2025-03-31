@@ -37,10 +37,10 @@ class CalendarAdapter(
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         holder.dayOfMonth.text = daysOfMonth[position].day
         //Log.d("Calendar cell","Position: "+position+" Day: "+daysOfMonth[position])
+        //holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border)
         if(daysOfMonth[position].day == ""){
             return
         }
-        holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border)
         val date = LocalDate.parse(daysOfMonth[position].date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
         addEvents(holder.eventListLL,CalendarEventsInstance.getEventsListOfDate(date))
         if(daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())) {
