@@ -1,6 +1,7 @@
 package com.example.daytastic
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.util.TypedValue
@@ -21,6 +22,7 @@ import java.time.format.DateTimeFormatter
 
 
 class CalendarAdapter(
+    private val context: Context,
     private val daysOfMonth: ArrayList<CalendarCellModel>,
     private val onItemListener: OnItemListener
 ) :
@@ -44,7 +46,9 @@ class CalendarAdapter(
         val date = LocalDate.parse(daysOfMonth[position].date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
         addEvents(holder.eventListLL,CalendarEventsInstance.getEventsListOfDate(date))
         if(daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())) {
-            holder.cellLayout.setBackgroundResource(R.drawable.calendar_cell_border_today)
+            val typedValue = TypedValue()
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue,true)
+            holder.cellLayout.setBackgroundColor(typedValue.data)
         }
     }
 

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.daytastic.databinding.ActivityCalendarBinding
+import com.example.daytastic.ui.ThemeHelper
 import com.example.daytastic.ui.calender.CalendarCellModel
 import com.example.daytastic.weather.Weather
 import com.example.daytastic.weather.WeatherInstance
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
     private var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?){
+        setTheme(getThemeFromPrefs())
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarBinding.inflate(layoutInflater) // Inflate the correct binding
         setContentView(binding.root)
@@ -59,7 +61,7 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
         monthYearText.text = monthYearFromDate(selectedDate)
         val daysInMonth: ArrayList<CalendarCellModel> = daysInMonthArray(selectedDate)
 
-        val calendarAdapter = CalendarAdapter(daysInMonth, this)
+        val calendarAdapter = CalendarAdapter(this,daysInMonth, this)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this, 7)
         calendarRecyclerView.layoutManager = layoutManager
         calendarRecyclerView.adapter = calendarAdapter
@@ -153,6 +155,14 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
             }
         }catch (ignore:Exception){
             Log.d("OKHTTP3","Failed to get temperature.. internet connection?")
+        }
+    }
+
+    private fun getThemeFromPrefs(): Int {
+        return when (ThemeHelper.getSavedTheme(this)) {
+            "Theme.MyApp.Light" ->  R.style.Theme_DayTastic_Light
+            "Theme.MyApp.Green" -> R.style.Theme_DayTastic_Green
+            else -> R.style.Theme_DayTastic_Dark
         }
     }
 }

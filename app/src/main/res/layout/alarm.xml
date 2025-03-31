@@ -31,6 +31,7 @@
         android:layout_height="80dp"
         android:background="@drawable/btn_circle_bg"
         android:text="X"
+        android:textAlignment="center"
         android:textSize="30sp"
         android:textColor="@android:color/white"
         android:layout_marginTop="@dimen/_120sdp"/>
