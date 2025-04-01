@@ -35,6 +35,8 @@
         <item name="colorOnSurfaceInverse">#dee4e1</item>
         <item name="colorPrimaryInverse">#016b5d</item>
         <item name="android:shadowColor">#000000</item>
+        <item name="colorError">#ba1a1a</item>
+        <item name="colorOnError">#ffffff</item>
     </style>
 
     <style name="Theme.DayTastic.Green" parent="Theme.Material3.Light.NoActionBar">

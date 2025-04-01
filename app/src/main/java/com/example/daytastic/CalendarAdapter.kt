@@ -46,7 +46,7 @@ class CalendarAdapter(
             return
         }
         val date = LocalDate.parse(daysOfMonth[position].date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
-        addEvents(holder.eventListLL,CalendarEventsInstance.getEventsListOfDate(date))
+        addEvents(holder,CalendarEventsInstance.getEventsListOfDate(date))
         if(daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())) {
             val typedValue = TypedValue()
             context.theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue,true)
@@ -57,19 +57,31 @@ class CalendarAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun addEvents(eventListLL: LinearLayout, eventsListOfDate: MutableList<CalendarEvent>?) {
+    private fun addEvents(holder: CalendarViewHolder, eventsListOfDate: MutableList<CalendarEvent>?) {
         if(eventsListOfDate.isNullOrEmpty()){
             return
         }
+        val eventListLL = holder.eventListLL
         eventsListOfDate.sortBy { event -> event.startTime }
         eventsListOfDate.forEach{ event ->
 
-            val eventItem = TextView(eventListLL.context)
-            eventItem.text = event.name
-            eventItem.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,4F,eventListLL.context.resources.displayMetrics)
-            eventItem.setBackgroundColor(event.color)
-            eventItem.layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-            eventListLL.addView(eventItem)
+            val eventItem = TextView(eventListLL.context).apply {
+                text = event.name
+                textSize = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    4F,
+                    eventListLL.context.resources.displayMetrics
+                )
+                setBackgroundColor(event.color)
+                setOnClickListener { holder.onClick(eventListLL)
+                Log.d("event clicked", "Clicked on event, parent: $parent")}
+                layoutParams = ViewGroup.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+                eventListLL.addView(eventItem)
+                Log.d("added event", "added event from parent: $eventListLL")
         }
     }
 
