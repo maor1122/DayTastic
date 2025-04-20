@@ -24,6 +24,7 @@ import android.widget.ViewFlipper
 import androidx.fragment.app.FragmentActivity
 import com.example.daytastic.ui.calender.CalendarEvent
 import com.example.daytastic.ui.calender.CalendarEventsInstance
+import com.google.android.material.button.MaterialButton
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -116,7 +117,7 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
         Log.d("addEventsToDialog","Selected Events Date: $selectedDate")
         val eventsListLinearLayout = findViewById<LinearLayout>(R.id.events_linear_layout)
         eventsListLinearLayout.removeAllViews()
-        val newEventImageView = findViewById<ImageView>(R.id.newEventButton)
+        val newEventImageView = findViewById<MaterialButton>(R.id.newEventButton)
         val eventListDate = findViewById<TextView>(R.id.calenderDayDate)
         eventListDate.text = selectedDate.toString()
         newEventImageView.setOnClickListener{
@@ -134,10 +135,11 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
             eventItem.findViewById<LinearLayout>(R.id.eventListItemLL).setOnClickListener {
                 initNewEventDialog(event)
                 viewFlipper.showNext()}
-            eventItem.findViewById<ImageView>(R.id.deleteEventBTN).setOnClickListener {
+            eventItem.findViewById<MaterialButton>(R.id.deleteEventBTN).setOnClickListener {
                 CalendarEventsInstance.deleteEventAndUpdate(event,context)
                 eventsListLinearLayout.removeView(eventItem)
             }
+            //eventItem.margin
             eventsListLinearLayout.addView(eventItem)
         }
     }

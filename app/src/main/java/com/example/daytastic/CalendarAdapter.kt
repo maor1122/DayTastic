@@ -2,9 +2,11 @@ package com.example.daytastic
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.DrawableContainer.DrawableContainerState
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
+import android.text.TextUtils
 import android.util.Log
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
@@ -47,8 +49,9 @@ class CalendarAdapter(
             return
         }
         val date = LocalDate.parse(daysOfMonth[position].date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
-        addEvents(holder,CalendarEventsInstance.getEventsListOfDate(date))
-        if(daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())) {
+        val today = daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())
+        addEvents(holder,CalendarEventsInstance.getEventsListOfDate(date),today)
+        if(today) {
             val typedValue = TypedValue()
             context.theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue,true)
             holder.cellLayout.setBackgroundColor(typedValue.data)
@@ -58,7 +61,7 @@ class CalendarAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun addEvents(holder: CalendarViewHolder, eventsListOfDate: MutableList<CalendarEvent>?) {
+    private fun addEvents(holder: CalendarViewHolder, eventsListOfDate: MutableList<CalendarEvent>?,today: Boolean) {
         if(eventsListOfDate.isNullOrEmpty()){
             return
         }
@@ -67,10 +70,26 @@ class CalendarAdapter(
         eventsListOfDate.sortBy { event -> event.startTime }
         eventsListOfDate.forEach{ event ->
             val eventItem = TextView(eventListLL.context).apply {
-                context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnSecondaryContainer, typedValue,true)
+                if(today){
+                    context.theme.resolveAttribute(
+                        com.google.android.material.R.attr.colorOnSurfaceInverse,
+                        typedValue,
+                        true
+                    )
+                    setBackgroundResource(R.drawable.calendar_cell_event_item_selected)
+                }else {
+                    context.theme.resolveAttribute(
+                        com.google.android.material.R.attr.colorOnSecondaryContainer,
+                        typedValue,
+                        true
+                    )
+                    setBackgroundResource(R.drawable.calendar_cell_event_item)
+                }
                 setTextColor(typedValue.data)
-                setBackgroundResource(R.drawable.calendar_cell_event_item)
                 text = event.name
+                isSingleLine = true
+                ellipsize = TextUtils.TruncateAt.END
+                setTypeface(typeface,Typeface.BOLD)
                 setPadding(8, 2, 2, 2)
                 textSize = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_SP,

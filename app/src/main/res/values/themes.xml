@@ -31,8 +31,8 @@
         <item name="colorOnSurfaceVariant">#bec9c5</item>
         <item name="colorOutline">#899390</item>
         <item name="colorOutlineVariant">#3f4946</item>
-        <item name="colorSurfaceInverse">#dee4e1</item>
-        <item name="colorOnSurfaceInverse">#dee4e1</item>
+        <item name="colorSurfaceInverse">#b1ccc5</item>
+        <item name="colorOnSurfaceInverse">#3f5752</item>
         <item name="colorPrimaryInverse">#016b5d</item>
         <item name="android:shadowColor">#000000</item>
         <item name="colorError">#ba1a1a</item>
