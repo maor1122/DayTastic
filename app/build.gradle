@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -38,6 +39,7 @@ android {
         viewBinding true
         buildConfig true
     }
+    buildToolsVersion '35.0.0'
 }
 
 dependencies {
@@ -57,4 +59,7 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
     implementation libs.sdp.android
     implementation libs.ssp.android
+    implementation libs.androidx.room.runtime
+    ksp libs.androidx.room.compiler
+    implementation libs.androidx.lifecycle.livedata.ktx
 }

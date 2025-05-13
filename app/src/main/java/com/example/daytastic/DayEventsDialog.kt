@@ -22,8 +22,8 @@ import android.widget.TimePicker
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.fragment.app.FragmentActivity
-import com.example.daytastic.ui.calender.CalendarEvent
-import com.example.daytastic.ui.calender.CalendarEventsInstance
+import com.example.daytastic.data.CalendarEvent
+import com.example.daytastic.ui.calender.CalendarEventsHandler
 import com.google.android.material.button.MaterialButton
 import java.time.LocalDate
 import java.time.LocalTime
@@ -31,7 +31,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.jvm.Throws
 
 
-class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, private val fragment: MainActivity) : Dialog(a) {
+class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, private val events: List<CalendarEvent>?, private val fragment: MainActivity) : Dialog(a) {
     private lateinit var eventNameED:EditText
     private lateinit var rgColorPicker:RadioGroup
     private lateinit var alarmTimeBeforeSpinner: Spinner
@@ -53,17 +53,16 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
     private fun init(){
         setWidgets()
         viewFlipper = findViewById(R.id.calendar_view_flipper)
-        val clickedDateEvents = CalendarEventsInstance.getEventsListOfDate(selectedDate)
-        if(clickedDateEvents.isNullOrEmpty()) {
+        if(events.isNullOrEmpty()) {
             initNewEventDialog(null)
             viewFlipper.showNext()
         }
         else{
-            initEventListDialog(clickedDateEvents)
+            initEventListDialog(events)
         }
     }
 
-    private fun initNewEventDialog(event:CalendarEvent?) {
+    private fun initNewEventDialog(event: CalendarEvent?) {
         findViewById<RadioButton>(getAlarmType(event)).isChecked = true
         alarmTypeRG.setOnCheckedChangeListener { group, id ->
             val buttonText = findViewById<RadioButton>(id).text
@@ -113,7 +112,7 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
     }
 
     @SuppressLint("SetTextI18n")
-    private fun initEventListDialog(clickedDateEvents: MutableList<CalendarEvent>) {
+    private fun initEventListDialog(clickedDateEvents: List<CalendarEvent>) {
         Log.d("addEventsToDialog","Selected Events Date: $selectedDate")
         val eventsListLinearLayout = findViewById<LinearLayout>(R.id.events_linear_layout)
         eventsListLinearLayout.removeAllViews()
@@ -124,7 +123,7 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
             initNewEventDialog(null)
             viewFlipper.showNext()
         }
-        clickedDateEvents.sortBy { event -> event.startTime }
+        clickedDateEvents.sortedBy { event -> event.startTime }
         clickedDateEvents.forEach{ event ->
             val inflater = LayoutInflater.from(ownerActivity)
             val eventItem: View = inflater.inflate(R.layout.event_list_item, null)
@@ -136,10 +135,11 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
                 initNewEventDialog(event)
                 viewFlipper.showNext()}
             eventItem.findViewById<MaterialButton>(R.id.deleteEventBTN).setOnClickListener {
-                CalendarEventsInstance.deleteEventAndUpdate(event,context)
+                CalendarEventsHandler.deleteEventAndUpdate(event,context)
                 eventsListLinearLayout.removeView(eventItem)
+
             }
-            //eventItem.margin
+            //TODO: edit eventItem.margin
             eventsListLinearLayout.addView(eventItem)
         }
     }
@@ -209,7 +209,7 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
             Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
         }
     }
-    private fun createEvent(): CalendarEvent{
+    private fun createEvent(): CalendarEvent {
         val alarmButtonIndex = alarmTypeRG.indexOfChild(findViewById(alarmTypeRG.checkedRadioButtonId))
         val alarmSelected = (alarmTypeRG.getChildAt(alarmButtonIndex) as RadioButton).text
         val colorButtonIndex = rgColorPicker.indexOfChild(rgColorPicker.findViewById(rgColorPicker.checkedRadioButtonId))
@@ -217,18 +217,18 @@ class DayEventsDialog(a: FragmentActivity, private val selectedDate: LocalDate, 
         val startTime = LocalTime.parse(startTimeButton.text)
         val endTime = LocalTime.parse(endTimeButton.text)
         val alarmTimingString = alarmTimeBeforeSpinner.selectedItem.toString()
-        return CalendarEvent(eventNameED.text.toString(),alarmSelected.toString(),colorSelected!!,startTime.toString(),endTime.toString(),
+        return CalendarEvent(0,eventNameED.text.toString(),alarmSelected.toString(),colorSelected!!,startTime.toString(),endTime.toString(),
             selectedDate.toString(),alarmTimingString)
     }
     @Throws
-    private fun saveEvent(event: CalendarEvent,prevEvent:CalendarEvent?){
+    private fun saveEvent(event: CalendarEvent, prevEvent: CalendarEvent?){
         if(event.name.isEmpty())
             throw Exception("Please fill event name")
         if(LocalTime.parse(event.startTime).isAfter(LocalTime.parse(event.endTime)))
             throw Exception("End time can't be after start time.")
         if(prevEvent!=null)
-            CalendarEventsInstance.deleteEvent(prevEvent)
-        CalendarEventsInstance.addEvent(event,context)
+            CalendarEventsHandler.deleteEvent(prevEvent)
+        CalendarEventsHandler.addEvent(event,context)
     }
 
     override fun onStop() {

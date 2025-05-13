@@ -3,7 +3,6 @@ package com.example.daytastic
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import android.graphics.drawable.DrawableContainer.DrawableContainerState
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.text.TextUtils
@@ -15,29 +14,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.view.children
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.daytastic.ui.calender.CalendarCellModel
-import com.example.daytastic.ui.calender.CalendarEvent
-import com.example.daytastic.ui.calender.CalendarEventsInstance
+import com.example.daytastic.data.CalendarEvent
+import com.example.daytastic.ui.calender.CalendarEventsHandler
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
 class CalendarAdapter(
     private val context: Context,
-    private val daysOfMonth: ArrayList<CalendarCellModel>,
-    private val onItemListener: OnItemListener
+    private val activity: FragmentActivity,
+    private var daysOfMonth: ArrayList<CalendarCellModel>,
+    private val mainActivity: MainActivity
 ) :
     RecyclerView.Adapter<CalendarViewHolder>() {
+        var events = emptyMap<String,List<CalendarEvent>>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val context = ContextThemeWrapper(parent.context,R.style.Theme_DayTastic_Dark)
         val inflater = LayoutInflater.from(context)
         val view: View = inflater.inflate(R.layout.calendar_cell, parent, false)
         val layoutParams = view.layoutParams
         layoutParams.height = (parent.height * 0.15).toInt()
-        return CalendarViewHolder(view, onItemListener)
+        return CalendarViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
@@ -49,8 +50,13 @@ class CalendarAdapter(
             return
         }
         val date = LocalDate.parse(daysOfMonth[position].date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
-        val today = daysOfMonth[position].date!!.atStartOfDay().isEqual(TodayDate.date.atStartOfDay())
-        addEvents(holder,CalendarEventsInstance.getEventsListOfDate(date),today)
+        holder.itemView.setOnClickListener{
+            if (daysOfMonth[position].day.isNotEmpty()) {
+                DayEventsDialog(activity,date,events[date.toString()],mainActivity).show()
+            }
+        }
+        val today = daysOfMonth[position].date!!.atStartOfDay().isEqual(DateHandler.todayDate.atStartOfDay())
+        addEvents(holder,CalendarEventsHandler.getEventsListOfDate(date,events),today)
         if(today) {
             val typedValue = TypedValue()
             context.theme.resolveAttribute(com.google.android.material.R.attr.colorSecondary, typedValue,true)
@@ -61,13 +67,13 @@ class CalendarAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun addEvents(holder: CalendarViewHolder, eventsListOfDate: MutableList<CalendarEvent>?,today: Boolean) {
+    private fun addEvents(holder: CalendarViewHolder, eventsListOfDate: List<CalendarEvent>?, today: Boolean) {
         if(eventsListOfDate.isNullOrEmpty()){
             return
         }
         val eventListLL = holder.eventListLL
         val typedValue = TypedValue()
-        eventsListOfDate.sortBy { event -> event.startTime }
+        eventsListOfDate.sortedBy { event -> event.startTime }
         eventsListOfDate.forEach{ event ->
             val eventItem = TextView(eventListLL.context).apply {
                 if(today){
@@ -96,7 +102,6 @@ class CalendarAdapter(
                     4F,
                     eventListLL.context.resources.displayMetrics
                 )
-                setOnClickListener { holder.onClick(eventListLL) }
                 layoutParams = ViewGroup.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -113,7 +118,14 @@ class CalendarAdapter(
         return daysOfMonth.size
     }
 
-    interface OnItemListener {
-        fun onItemClick(position: Int, dayText: String?)
+    fun setData(events: Map<String,List<CalendarEvent>>){
+        this.events = events
+        notifyDataSetChanged()
+        Log.d("CalendarAdapter:setData","Data changed, events amount: ${events.size}")
+    }
+
+    fun updateDays(newDays: ArrayList<CalendarCellModel>) {
+        this.daysOfMonth = newDays
+        notifyDataSetChanged()
     }
 }

@@ -6,11 +6,15 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.daytastic.DateHandler.selectedDate
+import com.example.daytastic.data.EventViewModel
 import com.example.daytastic.databinding.ActivityCalendarBinding
 import com.example.daytastic.ui.ThemeHelper
 import com.example.daytastic.ui.calender.CalendarCellModel
+import com.example.daytastic.ui.calender.CalendarEventsHandler
 import com.example.daytastic.weather.Weather
 import com.example.daytastic.weather.WeatherInstance
 import com.google.android.material.button.MaterialButton
@@ -21,14 +25,15 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCalendarBinding
     private lateinit var monthYearText: TextView
     private lateinit var calendarRecyclerView: RecyclerView
-    private lateinit var selectedDate: LocalDate
     private lateinit var btn_prev: MaterialButton
     private lateinit var btn_next: MaterialButton
+    private lateinit var mEventViewModel: EventViewModel
+    private lateinit var calendarAdapter: CalendarAdapter
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -37,6 +42,7 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
     override fun onCreate(savedInstanceState: Bundle?){
         setTheme(getThemeFromPrefs())
         DynamicColors.applyToActivitiesIfAvailable(application)
+        CalendarEventsHandler.initEventViewModel(this)
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarBinding.inflate(layoutInflater) // Inflate the correct binding
         setContentView(binding.root)
@@ -51,22 +57,27 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
         btn_prev.setOnClickListener { view -> previousMonthAction() }
         btn_next.setOnClickListener { view -> nextMonthAction() }
 
-        selectedDate = TodayDate.date
-        setMonthView()
-    }
+        selectedDate = DateHandler.todayDate
 
-    override fun onDestroy() {
-        super.onDestroy()
+
+        monthYearText.text = monthYearFromDate(selectedDate)
+        val daysInMonth: ArrayList<CalendarCellModel> = daysInMonthArray(selectedDate)
+        calendarAdapter = CalendarAdapter(this,this,daysInMonth,this)
+        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this, 7)
+        calendarRecyclerView.layoutManager = layoutManager
+        calendarRecyclerView.adapter = calendarAdapter
+        mEventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
+        mEventViewModel.events.observe(this) { event ->
+            calendarAdapter.setData(event)
+        }
+        mEventViewModel.updateEvents()
     }
 
     fun setMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
         val daysInMonth: ArrayList<CalendarCellModel> = daysInMonthArray(selectedDate)
-
-        val calendarAdapter = CalendarAdapter(this,daysInMonth, this)
-        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this, 7)
-        calendarRecyclerView.layoutManager = layoutManager
-        calendarRecyclerView.adapter = calendarAdapter
+        mEventViewModel.updateEvents()
+        calendarAdapter.updateDays(daysInMonth)
     }
 
     @SuppressLint("DefaultLocale")
@@ -78,8 +89,8 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
         var dayOfWeek = firstOfMonth.dayOfWeek.value
         if(dayOfWeek==7)
             dayOfWeek=0
-        val matchingDate = selectedDate == TodayDate.date
-        val dayOfTheMonth = TodayDate.date.dayOfMonth
+        val matchingDate = selectedDate == DateHandler.todayDate
+        val dayOfTheMonth = DateHandler.todayDate.dayOfMonth
         var date:LocalDate? = null
         //Log.d("Calender","day of week: $dayOfWeek, days in month: $daysInMonth")
         //Log.d("Weather","weather.days.size: ${WeatherInstance.weather!!.days.size}")
@@ -107,24 +118,17 @@ class MainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
         return date.format(formatter)
     }
 
-    override fun onItemClick(position: Int, dayText: String?) {
-        if (!dayText.isNullOrEmpty()) {
-            selectedDate = selectedDate.withDayOfMonth(dayText.toInt())
-            DayEventsDialog(this,selectedDate,this).show()
-        }
-    }
-
     private fun previousMonthAction() {
         selectedDate = selectedDate.minusMonths(1)
         setMonthView()
         counter = 0
-        Log.d("Calender","selectedDate==todayDate: ${selectedDate==TodayDate.date}")
-
+        Log.d("Calender","todayDate: ${selectedDate==DateHandler.todayDate}, selectedDate: $selectedDate")
     }
+
     private fun nextMonthAction() {
         selectedDate = selectedDate.plusMonths(1)
         setMonthView()
-        Log.d("Calender","selectedDate==todayDate: ${selectedDate==TodayDate.date}")
+        Log.d("Calender","todayDate: ${selectedDate==DateHandler.todayDate}, selectedDate: $selectedDate")
     }
 
     private fun initWeather() {
