@@ -1,14 +1,11 @@
 package com.example.daytastic.ui.calender
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.daytastic.data.CalendarEvent
 import com.example.daytastic.data.EventViewModel
 import com.example.daytastic.reminders.scheduleNotification
-import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -34,9 +31,13 @@ object CalendarEventsHandler {
             addNotification(context,event)
         }
         else if(event.alarmType=="Alarm"){
-            // TODO: Implement addAlarm function
+            addAlarm(context,event)
         }
         mEventViewModel.addEvent(event)
+    }
+
+    private fun addAlarm(context: Context, event: CalendarEvent) {
+        // TODO: Implement addAlarm function
     }
 
     private fun addNotification(context:Context, event: CalendarEvent) {

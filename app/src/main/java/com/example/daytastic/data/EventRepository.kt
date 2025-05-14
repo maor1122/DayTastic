@@ -1,8 +1,6 @@
 package com.example.daytastic.data
 
 import androidx.lifecycle.LiveData
-import java.util.Date
-import java.util.Dictionary
 
 class EventRepository(private val eventDao: EventDao) {
 
